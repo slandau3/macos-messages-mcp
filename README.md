@@ -1,12 +1,47 @@
 # macOS Messages MCP
 
-A privacy-focused, read-only [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for the local Messages database on macOS, written in native Swift.
+<p align="center">
+  <img src="docs/assets/macos-messages-mcp-overview.svg" alt="A diagram showing ChatGPT or Codex reading Messages history through a local read-only app" width="900">
+</p>
 
-It lets an MCP client search and inspect iMessage/SMS history that is already present on the Mac. It does not send messages, edit conversations, delete data, read arbitrary files, expose a network endpoint, or execute arbitrary SQL.
+> Ask ChatGPT or Codex about the messages already on your Mac - locally, read-only, and only when you ask.
 
-The project exists to provide a narrow local integration for assistants that need message context without granting a general-purpose runtime such as Node.js, Python, or a terminal broad access to the user's protected Messages directory.
+This is a small connector between an AI assistant and the iMessage/SMS history already stored on your Mac. It can help answer questions about past conversations without becoming a second Messages app or uploading your message history to a service.
 
-## Why this project was made
+**MCP** is simply the standard plug-in connection that lets ChatGPT or Codex ask this local app for message context.
+
+## Why you might use it
+
+You can ask questions such as:
+
+- “What time did Alex say dinner starts?”
+- “Find the last message about the flight.”
+- “What was the address someone sent me yesterday?”
+- “Show me the most recent messages in this conversation.”
+
+In plain English:
+
+```text
+[ You ask a question ] -> [ ChatGPT / Codex ] -> [ Local read-only app ]
+                                                        |
+                                                        v
+                                             [ Messages on your Mac ]
+                                                        |
+                         [ A useful answer comes back ] <-+
+```
+
+## What stays under your control
+
+| What matters | What this project does |
+| --- | --- |
+| Privacy | Keeps the lookup on your Mac; this project has no network service. |
+| Safety | Reads message history but cannot send, edit, or delete messages. |
+| Permission | Uses a specific bundled app for macOS access rather than giving broad access to Node, Python, or your terminal. |
+| Convenience | Starts only when the assistant needs it, then exits; there is no always-running menu-bar app. |
+
+If you only need a friendly way to search your own message history from ChatGPT or Codex, that is the whole idea. The rest of this README explains the setup and the technical details.
+
+## How it stays private
 
 macOS stores local Messages history in a SQLite database under `~/Library/Messages`. That database is useful for personal workflows, but it is also highly sensitive and protected by macOS privacy controls.
 
