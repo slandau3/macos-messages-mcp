@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 390" role="img" aria-labelledby="title desc">
+  <title id="title">Three reasons to use the macOS Messages MCP</title>
+  <desc id="desc">Three cards show finding a detail, recovering context, and catching up faster with message history.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc" />
+      <stop offset="1" stop-color="#f5f3ff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.11" />
+    </filter>
+    <style>
+      .background { fill: url(#background); }
+      .eyebrow { fill: #4f46e5; font: 700 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 2px; }
+      .title { fill: #0f172a; font: 700 29px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .heading { fill: #0f172a; font: 700 21px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .body { fill: #475569; font: 400 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .icon-purple { fill: #eef2ff; stroke: #6366f1; }
+      .icon-blue { fill: #eff6ff; stroke: #3b82f6; }
+      .icon-green { fill: #ecfdf5; stroke: #10b981; }
+      .line-purple { stroke: #4f46e5; }
+      .line-blue { stroke: #2563eb; }
+      .line-green { stroke: #059669; }
+      .line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      @media (prefers-color-scheme: dark) {
+        .background { fill: #111827; }
+        .title, .heading { fill: #f8fafc; }
+        .body { fill: #cbd5e1; }
+        .card { fill: #1e293b; stroke: #475569; }
+        .icon-purple { fill: #1e1b4b; }
+        .icon-blue { fill: #172554; }
+        .icon-green { fill: #022c22; }
+      }
+    </style>
+  </defs>
+
+  <rect class="background" width="1200" height="390" rx="28" />
+  <text class="eyebrow" x="60" y="54">WHY YOU MIGHT USE IT</text>
+  <text class="title" x="60" y="96">Turn old conversations into useful context</text>
+
+  <g filter="url(#shadow)">
+    <rect class="card" x="60" y="135" width="340" height="205" rx="20" />
+    <circle class="icon-purple" cx="111" cy="187" r="27" stroke-width="2" />
+    <circle cx="106" cy="182" r="9" fill="none" class="line line-purple" />
+    <path d="M113 189 L123 199" class="line line-purple" />
+    <text class="heading" x="155" y="195">Find the detail</text>
+    <text class="body" x="92" y="242">Look up an address, time,</text>
+    <text class="body" x="92" y="269">plan, or piece of information</text>
+    <text class="body" x="92" y="296">you know is in a message.</text>
+
+    <rect class="card" x="430" y="135" width="340" height="205" rx="20" />
+    <circle class="icon-blue" cx="481" cy="187" r="27" stroke-width="2" />
+    <path d="M466 180 C466 171 473 165 482 165 C491 165 498 171 498 180 L498 192 C498 201 491 207 482 207 C473 207 466 201 466 192 Z" class="line line-blue" />
+    <path d="M472 216 L482 207 L492 216" class="line line-blue" />
+    <text class="heading" x="525" y="195">Recover context</text>
+    <text class="body" x="462" y="242">Remember what was decided,</text>
+    <text class="body" x="462" y="269">who said what, or where a</text>
+    <text class="body" x="462" y="296">conversation left off.</text>
+
+    <rect class="card" x="800" y="135" width="340" height="205" rx="20" />
+    <circle class="icon-green" cx="851" cy="187" r="27" stroke-width="2" />
+    <path d="M837 181 H865 M837 190 H865 M837 199 H855" class="line line-green" />
+    <path d="M872 169 L876 179 L886 183 L876 187 L872 197 L868 187 L858 183 L868 179 Z" fill="none" class="line line-green" />
+    <text class="heading" x="895" y="195">Catch up faster</text>
+    <text class="body" x="832" y="242">Get a quick summary of a</text>
+    <text class="body" x="832" y="269">conversation instead of</text>
+    <text class="body" x="832" y="296">scrolling through everything.</text>
+  </g>
+</svg>

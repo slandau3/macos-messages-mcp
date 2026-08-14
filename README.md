@@ -4,60 +4,58 @@
   <img src="docs/assets/macos-messages-mcp-overview.svg" alt="A diagram showing ChatGPT or Codex reading Messages history through a local read-only app" width="900">
 </p>
 
-> Ask ChatGPT or Codex about the messages already on your Mac - locally, read-only, and only when you ask.
+<p align="center">
+  <strong>Your Messages history, ready when you need it.</strong><br>
+  Ask ChatGPT or Codex about conversations already on your Mac - without turning your computer into an always-on automation box.
+</p>
 
-This is a small connector between an AI assistant and the iMessage/SMS history already stored on your Mac. It can help answer questions about past conversations without becoming a second Messages app or uploading your message history to a service.
+## Why you'd use it
 
-**MCP** is simply the standard plug-in connection that lets ChatGPT or Codex ask this local app for message context.
+Maybe you remember that someone sent you an address, a time, or a plan - but not where it was. This gives your assistant a simple way to look through the message history you already have and bring back the useful bit.
 
-## Why you might use it
+<p align="center">
+  <img src="docs/assets/why-use-it.svg" alt="Three reasons to use the Messages connector: find a detail, recover context, and catch up faster" width="900">
+</p>
 
-You can ask questions such as:
+## What you can ask
+
+<p align="center">
+  <img src="docs/assets/questions.svg" alt="Example questions you can ask about your Messages history" width="900">
+</p>
 
 - “What time did Alex say dinner starts?”
 - “Find the last message about the flight.”
 - “What was the address someone sent me yesterday?”
-- “Show me the most recent messages in this conversation.”
+- “Catch me up on this conversation.”
 
-In plain English:
+You ask normally. The connector handles the lookup quietly in the background and returns the relevant context to your assistant.
 
-```text
-[ You ask a question ] -> [ ChatGPT / Codex ] -> [ Local read-only app ]
-                                                        |
-                                                        v
-                                             [ Messages on your Mac ]
-                                                        |
-                         [ A useful answer comes back ] <-+
-```
+## Private by design
 
-## What stays under your control
+<p align="center">
+  <img src="docs/assets/privacy-promises.svg" alt="Three privacy promises: stays local, read-only, and on demand" width="900">
+</p>
 
-| What matters | What this project does |
-| --- | --- |
-| Privacy | Keeps the lookup on your Mac; this project has no network service. |
-| Safety | Reads message history but cannot send, edit, or delete messages. |
-| Permission | Uses a specific bundled app for macOS access rather than giving broad access to Node, Python, or your terminal. |
-| Convenience | Starts only when the assistant needs it, then exits; there is no always-running menu-bar app. |
+Your messages stay on your Mac while this connector is working. It cannot send, edit, or delete messages, and it does not need another app sitting in your menu bar all day.
 
-If you only need a friendly way to search your own message history from ChatGPT or Codex, that is the whole idea. The rest of this README explains the setup and the technical details.
+## Get started
 
-## How it stays private
+<p align="center">
+  <img src="docs/assets/setup-flow.svg" alt="Three setup steps: build the app, allow macOS access, and connect ChatGPT or Codex" width="900">
+</p>
 
-macOS stores local Messages history in a SQLite database under `~/Library/Messages`. That database is useful for personal workflows, but it is also highly sensitive and protected by macOS privacy controls.
+1. Build the small local app.
+2. Give macOS permission to that app only.
+3. Add it to ChatGPT or Codex and ask a question.
 
-This project takes a deliberately small approach:
+The exact setup commands, permission notes, and client configuration are in the [Technical details](#technical-details) section below.
 
-- A native Swift worker is packaged inside a background-only `.app` bundle.
-- Full Disk Access can be granted to that specific app bundle rather than to Node, Python, a terminal, or the MCP client.
-- An MCP client starts a small stdio proxy only when it needs a tool call.
-- The proxy launches the app worker through LaunchServices and relays traffic over a private authenticated Unix socket.
-- SQLite is opened read-only with `PRAGMA query_only = ON`.
-- SQL is fixed and parameterized; the MCP surface never accepts arbitrary SQL or arbitrary file paths.
-- The six exposed tools are all explicitly marked read-only.
+## Technical details
 
-The result is a local, on-demand integration with a narrow permission boundary and no always-running service.
+<details>
+<summary>Show architecture, tools, permissions, testing, and developer notes</summary>
 
-## What it can do
+### What it can do
 
 | Tool | Description |
 | --- | --- |
@@ -70,7 +68,7 @@ The result is a local, on-demand integration with a narrow permission boundary a
 
 Limits are bounded by the server. List-like tools accept a maximum of 500 records per request and default to 50.
 
-## What it intentionally cannot do
+### What it intentionally cannot do
 
 This is an inspection server, not a messaging automation server. It has no tools for:
 
@@ -85,7 +83,7 @@ This is an inspection server, not a messaging automation server. It has no tools
 
 Modern Messages data can store text in either the ordinary `text` column or an archived `attributedBody` blob. The server uses a conservative extractor for common archived text when returning messages, but `search_messages` searches only the plain `text` column in v1.
 
-## Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
@@ -96,7 +94,7 @@ flowchart LR
     S --> D["chat.db + optional WAL/SHM"]
 ```
 
-### A typical request
+#### A typical request
 
 ```text
 +---------------------------+
@@ -147,7 +145,7 @@ The worker performs the database work. When SQLite WAL sidecars are present, it 
 
 The MCP transport is newline-delimited JSON-RPC 2.0 over stdio. The server handles `initialize`, `ping`, `tools/list`, and `tools/call`; notifications receive no response, as required by the protocol flow.
 
-## Requirements
+### Requirements
 
 - macOS 13 or newer;
 - Swift 5.9 or newer, normally provided by Xcode Command Line Tools;
@@ -156,7 +154,7 @@ The MCP transport is newline-delimited JSON-RPC 2.0 over stdio. The server handl
 
 No Node.js, Python, Homebrew package, database server, or third-party Swift dependency is required.
 
-## Build the app
+### Build the app
 
 Clone the repository, then run:
 
@@ -176,7 +174,7 @@ The script:
 
 The ad-hoc signature is intentionally suitable for local development, not distribution. Replacing the app with a rebuilt binary can cause macOS to require the app to be removed and added again under Full Disk Access.
 
-## Grant the minimum macOS permission
+### Grant the minimum macOS permission
 
 1. Build the app.
 2. Open **System Settings → Privacy & Security → Full Disk Access**.
@@ -185,7 +183,7 @@ The ad-hoc signature is intentionally suitable for local development, not distri
 
 The `doctor` tool reports whether the app can read the database and identifies the permission boundary when it cannot.
 
-## Configure an MCP client
+### Configure an MCP client
 
 Always configure the proxy inside the app bundle, not the worker binary:
 
@@ -193,7 +191,7 @@ Always configure the proxy inside the app bundle, not the worker binary:
 /ABSOLUTE/PATH/TO/macos-messages-mcp/outputs/MacOSMessagesMCP.app/Contents/MacOS/MacOSMessagesMCPProxy
 ```
 
-### ChatGPT desktop / Codex
+#### ChatGPT desktop / Codex
 
 Add this to the client's MCP configuration (`~/.codex/config.toml`):
 
@@ -204,7 +202,7 @@ command = "/ABSOLUTE/PATH/TO/macos-messages-mcp/outputs/MacOSMessagesMCP.app/Con
 
 Restart the client after changing its configuration so it reloads the server list.
 
-### Generic stdio MCP configuration
+#### Generic stdio MCP configuration
 
 Clients using JSON configuration can use:
 
@@ -221,7 +219,7 @@ Clients using JSON configuration can use:
 
 The absolute path is intentional. Relative paths depend on the MCP client's working directory and commonly fail when the client is launched from a GUI.
 
-## Verify the installation
+### Verify the installation
 
 Run the synthetic test suite:
 
@@ -240,7 +238,7 @@ The tests create temporary fixture databases containing synthetic handles and me
 
 After Full Disk Access and client configuration are complete, call `doctor` through the MCP client. A healthy result should report that the database exists, is readable, opens read-only, has query-only enabled, and matches the expected schema.
 
-## Privacy and security model
+### Privacy and security model
 
 The repository contains source code and synthetic test data only. It does not contain a Messages database, message export, attachment, contact list, API key, credential, local absolute path, or production query result.
 
@@ -257,7 +255,7 @@ Important boundaries:
 
 Message contents are still sensitive when returned to an MCP client. The client and model may process, display, or log tool results according to their own policies. Connect this server only to assistants and MCP clients you trust, and prefer read-only permissions in those clients as well.
 
-## Limitations
+### Limitations
 
 - The Messages database schema is private Apple implementation detail and may change across macOS releases.
 - WAL snapshots are best-effort consistent. A changing database can cause a request to fail rather than return an unsafe read.
@@ -267,13 +265,13 @@ Message contents are still sensitive when returned to an MCP client. The client 
 - Group-chat display names may be absent; the chat identifier is used as a fallback.
 - This project reads the local database on the Mac. It is not an iCloud API and does not fetch messages from Apple's servers.
 
-## Troubleshooting
+### Troubleshooting
 
-### `doctor` says the database is not readable
+#### `doctor` says the database is not readable
 
 Confirm that Full Disk Access is granted to the exact rebuilt app bundle. Do not grant it to Node, Python, the terminal, or the MCP client. If the app was rebuilt, remove the old app entry and add the new bundle again.
 
-### The MCP client cannot start the server
+#### The MCP client cannot start the server
 
 Check that:
 
@@ -282,15 +280,17 @@ Check that:
 - the app bundle exists at that path;
 - the client was restarted after configuration changes.
 
-### The app appears in the Dock or has a window
+#### The app appears in the Dock or has a window
 
 The generated bundle is intended to be background-only via `LSUIElement`. Rebuild the app from this repository and verify that the generated `Info.plist` contains `LSUIElement` set to true.
 
-## Development notes
+### Development notes
 
 Keep tests synthetic. Never commit a real `chat.db`, WAL/SHM sidecar, message export, contact dump, screenshot containing message content, or log containing tool results. Build outputs and the local app bundle are ignored by `.gitignore`.
 
 Before submitting changes, run the test suite and review the complete diff for personal data and accidental permission expansion.
+
+</details>
 
 ## License
 

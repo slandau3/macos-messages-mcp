@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Example questions for the macOS Messages MCP</title>
+  <desc id="desc">Three colorful message-style cards show example questions a user can ask about their message history.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef2ff" />
+      <stop offset="1" stop-color="#ecfeff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12" />
+    </filter>
+    <style>
+      .background { fill: url(#background); }
+      .eyebrow { fill: #4f46e5; font: 700 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 2px; }
+      .title { fill: #0f172a; font: 700 29px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .bubble-purple { fill: #4f46e5; }
+      .bubble-blue { fill: #0ea5e9; }
+      .bubble-green { fill: #10b981; }
+      .question { fill: #ffffff; font: 600 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .hint { fill: #475569; font: 400 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      @media (prefers-color-scheme: dark) {
+        .background { fill: #111827; }
+        .title { fill: #f8fafc; }
+        .hint { fill: #cbd5e1; }
+      }
+    </style>
+  </defs>
+
+  <rect class="background" width="1200" height="430" rx="28" />
+  <text class="eyebrow" x="60" y="57">ASK NATURALLY</text>
+  <text class="title" x="60" y="101">Questions that feel like conversation</text>
+  <text class="hint" x="60" y="135">You do not need to remember a name, date, or exact phrase.</text>
+
+  <g filter="url(#shadow)">
+    <path class="bubble-purple" d="M72 185 C72 169 85 156 101 156 H1099 C1115 156 1128 169 1128 185 V232 C1128 248 1115 261 1099 261 H150 L112 291 L116 261 H101 C85 261 72 248 72 232 Z" />
+    <text class="question" x="116" y="216">“What time did Alex say dinner starts?”</text>
+
+    <path class="bubble-blue" d="M72 305 C72 289 85 276 101 276 H1099 C1115 276 1128 289 1128 305 V352 C1128 368 1115 381 1099 381 H150 L112 411 L116 381 H101 C85 381 72 368 72 352 Z" />
+    <text class="question" x="116" y="336">“Find the latest message about the flight.”</text>
+  </g>
+
+  <circle class="bubble-green" cx="1010" cy="104" r="25" />
+  <path d="M999 104 H1021 M1010 93 V115" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+</svg>
