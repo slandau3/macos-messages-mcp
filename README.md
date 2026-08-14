@@ -61,6 +61,44 @@ flowchart LR
     S --> D["chat.db + optional WAL/SHM"]
 ```
 
+### A typical request
+
+```text
++---------------------------+
+| You ask ChatGPT / Codex:  |
+| "Find my latest message"  |
++-------------+-------------+
+              |
+              | MCP tool call over stdio
+              v
++---------------------------+
+| MacOSMessagesMCPProxy     |
+| local + on demand         |
++-------------+-------------+
+              |
+              | authenticated Unix socket
+              v
++---------------------------+
+| MacOSMessagesMCP.app      |
+| native Swift worker       |
+| Full Disk Access here only|
++-------------+-------------+
+              |
+              | read-only snapshot
+              v
++---------------------------+
+| ~/Library/Messages        |
+| chat.db (+ WAL / SHM)     |
++-------------+-------------+
+              |
+              | structured results
+              v
++---------------------------+
+| Back to the assistant     |
+| read-only + no daemon     |
++---------------------------+
+```
+
 The proxy is the executable an MCP client should launch. It:
 
 1. Creates a private Unix socket with a random name and restrictive permissions.
