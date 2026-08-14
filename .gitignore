@@ -1,0 +1,6 @@
+.build/
+outputs/
+.DS_Store
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
